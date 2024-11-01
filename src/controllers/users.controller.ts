@@ -43,7 +43,7 @@ export class UsersController {
       if (!validPassword) throw new NotFoundError('User or password incorrect')
       const token = generateToken(user)
       await this.userService.updateLastConnection(user.userID)
-      return res.cookie('token', token, { httpOnly: true }).json({ message: 'Login successful' })
+      return res.cookie('token', token, { httpOnly: true }).json({ message: 'Login successful', user: { name: user.name, surname: user.surname, role: user.role } })
     } catch (error) {
       if (error instanceof CustomError) {
         return res.status(error.statusCode).json({ message: error.message })
