@@ -6,11 +6,7 @@ import { comparePassword } from '../utils/passwords'
 import { generateToken } from '../validations/token'
 
 export class UsersController {
-  private readonly userService: UserService
-
-  constructor (userService: UserService) {
-    this.userService = userService
-  }
+  private readonly userService = new UserService()
 
   public async register (req: Request, res: Response): Promise<Response> {
     try {

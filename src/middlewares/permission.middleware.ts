@@ -11,9 +11,11 @@ export const PermissionMiddleware = (roles: string[]) => {
       }
       next()
       return null
-    } catch (error: any) {
-      return res.status(403).json({ message: 'Forbidden access' })
-      logger.error(`${new Date().toLocaleDateString()} | Error Type: ${error.name} | Status Code: ${403} | Message: ${error.message} | Stack: ${error.stack}`)
+    } catch (error) {
+      if (error instanceof Error) {
+        logger.error(`${new Date().toISOString()} | Error Type: ${error.name} | Status Code: 403 | Message: ${error.message} }`)
+        return res.status(403).json({ message: 'Forbidden access' })
+      }
     }
   }
 }

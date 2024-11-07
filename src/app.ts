@@ -14,7 +14,7 @@ const routes = new Routes().router
 
 // Configuración de CORS
 const corsOptions = {
-  origin: 'http://localhost:9000', // Reemplaza con la URL de tu frontend
+  origin: true, // Reemplaza con la URL de tu frontend
   credentials: true, // Permitir el envío de cookies
   optionsSuccessStatus: 200
 }

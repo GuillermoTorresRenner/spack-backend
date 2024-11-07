@@ -3,14 +3,13 @@ import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import { UnauthorizedError } from '../errors/customError'
 import { UserService } from '../services/users.service'
-import { UsersRepository } from '../repositories/users.repository'
 import logger from '../errors/logger'
 
 interface JwtPayload {
   id: string
 }
 
-export const AuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+export const AuthMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<String | any > => {
   const token = req.cookies.token
 
   if (token === null || token === undefined) {
@@ -19,9 +18,9 @@ export const AuthMiddleware = async (req: Request, res: Response, next: NextFunc
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload
-    if (!decoded) throw new UnauthorizedError('Token no válido')
+    if (decoded == null) throw new UnauthorizedError('Token no válido')
 
-    const userService = new UserService(new UsersRepository())
+    const userService = new UserService()
     const role = await userService.getRoleByID(decoded.id)
     if (role == null) throw new UnauthorizedError('Usuario no encontrado')
 
@@ -30,8 +29,13 @@ export const AuthMiddleware = async (req: Request, res: Response, next: NextFunc
 
     next()
     return null
-  } catch (error: any) {
-    logger.error(`${new Date().toLocaleDateString()} | Error Type: ${error.name} | Status Code: ${403} | Message: ${error.message} | Stack: ${error.stack}`)
-    return res.status(403).json({ message: 'Token no válido' })
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error(`${new Date().toISOString()} | Error Type: ${error.name} | Status Code: ${403} | Message: ${error.message}`)
+      return res.status(403).json({ message: 'Token no válido' })
+    } else {
+      logger.error(`${new Date().toISOString()} | Error Type: Unknown | Status Code: ${403} | Message: Unknown error`)
+      return res.status(403).json({ message: 'Token no válido' })
+    }
   }
 }

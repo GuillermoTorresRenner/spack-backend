@@ -1,13 +1,10 @@
 import { UsersRepository } from '../repositories/users.repository'
 import { UsersCreateDTO, UsersWhoamiDTO } from '../../types/users.dto'
 import { hashPassword } from '../utils/passwords'
-import { Users } from '@prisma/client'
-export class UserService {
-  private readonly usersRepository: UsersRepository
+import { Role, Users } from '@prisma/client'
 
-  constructor (usersRepository: UsersRepository) {
-    this.usersRepository = usersRepository
-  }
+export class UserService {
+  private readonly usersRepository = new UsersRepository()
 
   async createUser (user: UsersCreateDTO): Promise<UsersCreateDTO> {
     user.password = hashPassword(user.password)
@@ -23,7 +20,7 @@ export class UserService {
     const userDTO: UsersWhoamiDTO = {
       name: user?.name as string,
       surname: user?.surname as string,
-      rut: user?.rut as string
+      role: user?.role as Role
     }
     return userDTO
   }
