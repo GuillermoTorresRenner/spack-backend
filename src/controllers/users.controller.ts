@@ -75,7 +75,7 @@ export class UsersController {
       const { id } = req.params
       const user = await this.userService.getUserById(id)
       if (user == null) throw new NotFoundError('Usuario no encontrado')
-      return res.json(user)
+      return res.json({ userId: user.userID, name: user.name, surname: user.surname, role: user.role, isActive: user.isActive })
     } catch (error) {
       if (error instanceof CustomError) {
         return res.status(error.statusCode).json({ message: error.message })
