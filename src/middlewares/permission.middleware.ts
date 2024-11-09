@@ -5,6 +5,7 @@ export const PermissionMiddleware = (roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       const userRole = req.userRole
+      // console.log('ROL DE USUARIO', userRole)
       if (!roles.includes(userRole)) {
         logger.error(`${new Date().toLocaleDateString()} | Error Type: ${'Forbidden User Role'} | Status Code: ${403} | Message: ${"This user Role can't access to this resource"} `)
         return res.status(403).json({ message: 'Forbidden access' })

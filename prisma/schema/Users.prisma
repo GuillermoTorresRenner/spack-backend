@@ -1,17 +1,21 @@
 model Users {
-    userID         String    @id @default(cuid())
-    rut            String    @unique
-    password       String
-    name           String?
-    surname        String?
-    role           Role      @default(USER)
-    lastConnection DateTime?
-    createdAt      DateTime  @default(now())
-    updatedAt      DateTime  @updatedAt
-    deletedAt      DateTime?
+    userID                 String    @id @default(cuid())
+    rut                    String    @unique
+    password               String
+    name                   String?
+    surname                String?
+    role                   Role
+    lastConnection         DateTime?
+    createdAt              DateTime  @default(now())
+    updatedAt              DateTime  @updatedAt
+    isActive               Boolean?  @default(true)
+    lastPassword           String
+    nextPasswordChangeDate DateTime? @default(now())
 }
 
 enum Role {
     ADMIN
-    USER
+    PRODUCTION
+    QUALITY
+    STORE
 }

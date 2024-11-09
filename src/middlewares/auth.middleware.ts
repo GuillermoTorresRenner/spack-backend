@@ -25,7 +25,7 @@ export const AuthMiddleware = async (req: Request, res: Response, next: NextFunc
     if (role == null) throw new UnauthorizedError('Usuario no encontrado')
 
     req.userID = decoded.id
-    req.userRole = role
+    req.userRole = role.role
 
     next()
     return null

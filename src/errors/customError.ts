@@ -8,7 +8,7 @@ export abstract class CustomError extends Error {
     this.statusCode = statusCode
     Object.setPrototypeOf(this, CustomError.prototype)
 
-    this.logError(`${new Date().toLocaleDateString()} | Error Type: ${this.name} | Status Code: ${this.statusCode} | Message: ${this.message} | Stack: ${this.stack}`)
+    this.logError(`${new Date().toLocaleDateString()} | Error Type: ${this.name} | Status Code: ${this.statusCode} | Message: ${this.message} `)
   }
 
   logError (logData: string): void {
@@ -23,19 +23,19 @@ export class NotFoundError extends CustomError {
 }
 
 export class BadRequestError extends CustomError {
-  constructor (message = 'Bad Request') {
+  constructor (message = 'Solicitud incorrecta') {
     super(message, 400)
   }
 }
 
 export class UnauthorizedError extends CustomError {
-  constructor (message = 'Unauthorized') {
+  constructor (message = 'No autorizado') {
     super(message, 401)
   }
 }
 
 export class ForbiddenError extends CustomError {
-  constructor (message = 'Forbidden') {
+  constructor (message = 'Acceso prohibido') {
     super(message, 403)
   }
 }
@@ -47,7 +47,12 @@ export class InternalServerError extends CustomError {
 }
 
 export class UserCreatedError extends CustomError {
-  constructor (message = 'User already registered') {
-    super(message, 409) // Cambiado a 409 Conflict
+  constructor (message = 'Usuario ya registrado') {
+    super(message, 409)
+  }
+}
+export class ExpiredPasswordError extends CustomError {
+  constructor (message = 'Contraseña expirada') {
+    super(message, 403)
   }
 }

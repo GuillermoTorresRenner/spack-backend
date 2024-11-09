@@ -7,6 +7,7 @@
     "lint": "ts-standard",
     "test": "jest --coverage",
     "tsc": "tsc",
+    "seed": "ts-node seed.ts",
     "dev": "ts-node-dev src/app.ts",
     "start": "node build/app.js"
   },
@@ -40,6 +41,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.19.1",
+    "@types/moment": "^2.13.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -48,6 +50,7 @@
     "express-rate-limit": "^7.4.0",
     "express-validator": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
+    "moment": "^2.30.1",
     "morgan": "^1.10.0",
     "winston": "^3.14.2"
   },
