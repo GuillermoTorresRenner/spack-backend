@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { UserService } from '../services/users.service'
 import { UsersCreateDTO } from '../types/users.dto'
-import { InternalServerError, NotFoundError, CustomError } from '../errors/customError'
+import { InternalServerError, NotFoundError, CustomError, RepeatedPasswordError } from '../errors/customError'
 import { comparePassword, hashPassword, inTwoMonths } from '../utils/passwords'
 export class UsersController {
   private readonly userService = new UserService()
@@ -32,8 +32,9 @@ export class UsersController {
       if (foundedUser == null) throw new NotFoundError('Usuario no encontrado')
       const validPassword = comparePassword(currentPassword, foundedUser.password)
       if (!validPassword) throw new NotFoundError('Contraseña actual incorrecta')
+      const repeatedPassword = comparePassword(newPassword, foundedUser.password)
+      if (repeatedPassword) throw new RepeatedPasswordError('La contraseña nueva no puede ser igual a la anterior')
       const hashedNewPassword = hashPassword(newPassword)
-      console.log(hashedNewPassword)
       const updatedPassword = await this.userService.updatePassword(userID, hashedNewPassword, inTwoMonths())
       if (updatedPassword == null) throw new InternalServerError('Error al Actualizar contraseña')
       return res.json({ message: 'Contraseña actualizada con éxito' })

@@ -21,8 +21,8 @@ export class UsersRoutes {
   private initializeRoutes (): void {
     // Rutas de usuarios
 
+    this.router.put('/update-password',AuthMiddleware,PermissionMiddleware(["ADMIN", "PRODUCTION", "QUALITY","STORE"]), validateRequest(ValidationNewPasswordRules), this.userController.updatePassword.bind(this.userController))
     this.router.put('/:userIdToUpdate', AuthMiddleware, PermissionMiddleware(["ADMIN"]),validateRequest(ValidationUpdateUserRules),this.userController.updateUserData.bind(this.userController))
-    this.router.put('/update-password',validateRequest(ValidationNewPasswordRules), AuthMiddleware, this.userController.updatePassword.bind(this.userController))
     this.router.delete('/:userIDToDelete', AuthMiddleware, validateRequest(ValidateDeleteUserRules),PermissionMiddleware(["ADMIN"]),this.userController.deleteUser.bind(this.userController))
     this.router.get('/', AuthMiddleware,PermissionMiddleware(["ADMIN"]), this.userController.getAllActiveUsers.bind(this.userController))
     this.router.get('/:id', AuthMiddleware,validateRequest(ValidateGetUserByIdRules),PermissionMiddleware(["ADMIN"]) ,this.userController.getUserById.bind(this.userController))

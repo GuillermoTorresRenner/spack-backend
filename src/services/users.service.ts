@@ -1,4 +1,3 @@
-import { UsersEvenInactive } from '../../types/users.dto'
 import { UsersRepository } from '../repositories/users.repository'
 import { UsersCreateDTO, UsersGet, UsersWhoamiDTO } from '../types/users.dto'
 import { hashPassword } from '../utils/passwords'
@@ -33,15 +32,10 @@ export class UserService {
     return userDTO
   }
 
-  async getUserByRutEvenInactive (rut: string): Promise<UsersEvenInactive> {
+  async getUserByRutEvenInactive (rut: string): Promise<Users | null > {
     const user = await this.usersRepository.findByRutEvenInactive(rut)
-    const userDTO: UsersEvenInactive = {
-      name: user?.name as string,
-      surname: user?.surname as string,
-      role: user?.role as Role,
-      isActive: user?.isActive as boolean
-    }
-    return userDTO
+
+    return user
   }
 
   async updateLastConnection (userID: string): Promise<Users> {

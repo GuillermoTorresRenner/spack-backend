@@ -56,3 +56,8 @@ export class ExpiredPasswordError extends CustomError {
     super(message, 403)
   }
 }
+export class RepeatedPasswordError extends CustomError {
+  constructor (message = 'La contraseña nueva no puede ser igual a la anterior') {
+    super(message, 400)
+  }
+}
