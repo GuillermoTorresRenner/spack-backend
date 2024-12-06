@@ -5,23 +5,11 @@ import { validateRequest } from '../middlewares/validateRequest'
 import { AuthMiddleware } from '../middlewares/auth.middleware'
 import { PermissionMiddleware } from '../middlewares/permission.middleware'
 
-export class AuthRoutes {
-  public router: Router
-  private readonly authController: AuthController
-
-  constructor () {
-    this.router = Router()
-    this.authController = new AuthController() // Instancia del controlador con inyección de dependencias
-    this.initializeRoutes()
-  }
-
-  // Método para inicializar las rutas
-
-  private initializeRoutes (): void {
+const router= Router()
+const authController = new AuthController() // Instancia del controlador con inyección de dependencias
     // Rutas de usuarios
-    this.router.post('/register', validateRequest(ValidationRegisterRules),AuthMiddleware,PermissionMiddleware(["ADMIN"]), this.authController.register.bind(this.authController))
-    this.router.post('/login', validateRequest(ValidationLoginRules), this.authController.login.bind(this.authController))
-    this.router.get('/whoami', AuthMiddleware, this.authController.whoami.bind(this.authController))
-    this.router.get('/logout', AuthMiddleware, this.authController.logout.bind(this.authController))
-  }
-}
+    router.post('/register', validateRequest(ValidationRegisterRules),AuthMiddleware,PermissionMiddleware(["ADMIN"]), authController.register.bind(authController))
+    router.post('/login', validateRequest(ValidationLoginRules), authController.login.bind(authController))
+    router.get('/whoami', AuthMiddleware, authController.whoami.bind(authController))
+    router.get('/logout', AuthMiddleware, authController.logout.bind(authController))
+    export default router
