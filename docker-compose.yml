@@ -1,5 +1,7 @@
+version: '3.8'
 services:
   app:
+    container_name: backend
     build: .
     ports:
       - "3000:3000"
@@ -8,4 +10,25 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
+      - DATABASE_URL=postgresql://guille:4Emperador@db:5432/spak
     command: npm run dev
+    depends_on:
+      - db
+    networks:
+      - internal_network
+
+  db:
+    container_name: spak_db
+    image: postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - ../db_data:/var/lib/postgresql/data
+    networks:
+      - internal_network
+
+networks:
+  internal_network:
+    driver: bridge
