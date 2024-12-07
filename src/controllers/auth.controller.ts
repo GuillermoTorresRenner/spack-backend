@@ -12,7 +12,28 @@ import { generateToken } from '../validations/token'
 
 export class AuthController {
   private readonly userService = new UserService()
-
+  /**
+   * @swagger
+   * /auth/register:
+   *   post:
+   *     summary: Registra un nuevo usuario
+   *     tags: [Auth]
+   *     security:
+   *       - bearerAuth: []
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/UsersDTO'
+   *     responses:
+   *       201:
+   *         description: Usuario creado exitosamente
+   *       400:
+   *         description: Error en la solicitud
+   *       500:
+   *         description: Error interno del servidor
+   */
   public async register (req: Request, res: Response): Promise<Response> {
     try {
       const user: UsersCreateDTO = req.body
@@ -42,6 +63,31 @@ export class AuthController {
     }
   }
 
+  /**
+   * @swagger
+   * /auth/login:
+   *   post:
+   *     summary: Inicia sesión un usuario
+   *     tags: [Auth]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               rut:
+   *                 type: string
+   *               password:
+   *                 type: string
+   *     responses:
+   *       200:
+   *         description: Inicio de sesión exitoso
+   *       401:
+   *         description: Credenciales incorrectas
+   *       500:
+   *         description: Error interno del servidor
+   */
   public async login (req: Request, res: Response): Promise<Response> {
     try {
       const { rut, password } = req.body
@@ -76,6 +122,22 @@ export class AuthController {
     }
   }
 
+  /**
+   * @swagger
+   * /auth/whoami:
+   *   get:
+   *     summary: Verifica la identidad del usuario
+   *     tags: [Auth]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Usuario verificado exitosamente
+   *       401:
+   *         description: No autorizado
+   *       500:
+   *         description: Error interno del servidor
+   */
   public async whoami (req: Request, res: Response): Promise<Response> {
     try {
       const userID = req.userID ?? ''
@@ -97,6 +159,18 @@ export class AuthController {
     }
   }
 
+  /**
+   * @swagger
+   * /auth/logout:
+   *   post:
+   *     summary: Cierra sesión un usuario
+   *     tags: [Auth]
+   *     responses:
+   *       200:
+   *         description: Cierre de sesión exitoso
+   *       500:
+   *         description: Error interno del servidor
+   */
   async logout (_req: Request, res: Response): Promise<Response> {
     try {
       res.clearCookie('token').json({ message: 'Logout exitoso' })

@@ -3,9 +3,39 @@ import { UserService } from '../services/users.service'
 import { UsersCreateDTO } from '../types/users.dto'
 import { InternalServerError, NotFoundError, CustomError, RepeatedPasswordError } from '../errors/customError'
 import { comparePassword, hashPassword, inTwoMonths } from '../utils/passwords'
+
 export class UsersController {
   private readonly userService = new UserService()
 
+  /**
+   * @swagger
+   * /users/{userIdToUpdate}:
+   *   put:
+   *     summary: Actualiza los datos de un usuario
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: userIdToUpdate
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: ID del usuario a actualizar
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/UsersDTO'
+   *     responses:
+   *       200:
+   *         description: Usuario actualizado con éxito
+   *       404:
+   *         description: Usuario no encontrado
+   *       500:
+   *         description: Error interno del servidor
+   */
   public async updateUserData (req: Request, res: Response): Promise<Response> {
     try {
       const data = req.body
@@ -24,6 +54,33 @@ export class UsersController {
     }
   }
 
+  /**
+   * @swagger
+   * /users/update-password:
+   *   put:
+   *     summary: Actualiza la contraseña de un usuario
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               currentPassword:
+   *                 type: string
+   *               newPassword:
+   *                 type: string
+   *     responses:
+   *       200:
+   *         description: Contraseña actualizada con éxito
+   *       404:
+   *         description: Usuario no encontrado o contraseña actual incorrecta
+   *       500:
+   *         description: Error interno del servidor
+   */
   public async updatePassword (req: Request, res: Response): Promise<Response> {
     try {
       const { currentPassword, newPassword } = req.body
@@ -46,6 +103,29 @@ export class UsersController {
     }
   }
 
+  /**
+   * @swagger
+   * /users/{userIDToDelete}:
+   *   delete:
+   *     summary: Elimina un usuario
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: userIDToDelete
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: ID del usuario a eliminar
+   *     responses:
+   *       200:
+   *         description: Usuario eliminado con éxito
+   *       404:
+   *         description: Usuario no encontrado
+   *       500:
+   *         description: Error interno del servidor
+   */
   public async deleteUser (req: Request, res: Response): Promise<Response> {
     try {
       const { userIDToDelete } = req.params
@@ -62,6 +142,26 @@ export class UsersController {
     }
   }
 
+  /**
+   * @swagger
+   * /users:
+   *   get:
+   *     summary: Obtiene todos los usuarios activos
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Lista de usuarios activos
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/UsersGet'
+   *       500:
+   *         description: Error interno del servidor
+   */
   public async getAllActiveUsers (_req: Request, res: Response): Promise<Response> {
     try {
       const activeUsers = await this.userService.getAllActiveUsers()
@@ -71,6 +171,33 @@ export class UsersController {
     }
   }
 
+  /**
+   * @swagger
+   * /users/{id}:
+   *   get:
+   *     summary: Obtiene un usuario por ID
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: ID del usuario a obtener
+   *     responses:
+   *       200:
+   *         description: Datos del usuario
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/UsersGet'
+   *       404:
+   *         description: Usuario no encontrado
+   *       500:
+   *         description: Error interno del servidor
+   */
   public async getUserById (req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params
